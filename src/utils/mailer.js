@@ -8,15 +8,18 @@ export const sendEmail = async ({ email, emailtype, userid }) => {
     const token = await bcryptjs.hash(userid.toString(), 10);
     if (emailtype === "Verify") {
       await User.findByIdAndUpdate(userid, {
-        isVerified: true,
-        verifytoken: token,
-        verifytokenExpiry: Date.now() + 3600000,
+        $set: {
+          verifytoken: token,
+          verifytokenExpiry: Date.now() + 3600000,
+        },
       });
     }
     if (emailtype === "Reset") {
       await User.findByIdAndUpdate(userid, {
-        forgotpasswordtoken: token,
-        forgotpasswordtokenExpiry: Date.now() + 3600000,
+        $set: {
+          forgotpasswordtoken: token,
+          forgotpasswordtokenExpiry: Date.now() + 3600000,
+        },
       });
     }
     const transporter = nodemailer.createTransport({
@@ -34,7 +37,14 @@ export const sendEmail = async ({ email, emailtype, userid }) => {
         emailtype === "Reset" ? "Reset your Account Password" : "Verify Email",
       html: `
                 <h1>Hi, ${email}</h1>
-                <p>${emailtype === "Reset" ? "Click this link to reset your password" : "Click this link to verify your email"} <a href="${process.env.NEXTAUTH_URL}/verify/${token}">Verify Account</a></p>
+                <p>${
+                  emailtype === "Reset"
+                    ? "Click this link to reset your password"
+                    : "Click this link to verify your email"
+                } <a href="${
+        process.env.NEXTAUTH_URL
+      }/verify?token=${token}">Verify Account</a></p>
+      <p>This link will expire in an hour. the token is ${token}</p>
                 <p>Best regards, <br> Sebanti's Team</p>
                 `,
     };

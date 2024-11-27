@@ -59,7 +59,8 @@ export async function POST(req) {
       email,
       password: hashedPassword,
     });
-    console.log(user);
+    const usershow = await User.findOne({ email }).select("-password -__v  -verifytoken -verifytokenExpiry -forgotpasswordtoken -forgotpasswordtokenExpiry -createdAt -updatedAt");
+    console.log(usershow);
 
     await sendEmail({ email, emailtype: "Verify", userid: user._id });
 
@@ -67,7 +68,7 @@ export async function POST(req) {
       JSON.stringify({
         message: "User registered successfully",
         success: true,
-        user,
+        user:usershow,
       }),
       { status: 200 }
     );
