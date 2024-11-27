@@ -9,7 +9,7 @@ export async function GET() {
         status: 200,
       }
     );
-    cookies().set("token", "", {
+    await cookies().set("token", "", {
       httpOnly: true,
       maxAge: 0,
       expires: new Date(0),

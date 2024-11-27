@@ -28,7 +28,7 @@ export async function POST(req) {
       process.env.JWT_TOKEN_SECRET,
       { expiresIn: "1d" }
     );
-    cookies().set({
+    await cookies().set({
         name: "token",
         value: token,
         httpOnly: true,
