@@ -6,10 +6,11 @@ import bcryptjs from "bcryptjs";
 export const sendEmail = async ({ email, emailtype, userid }) => {
   try {
     const token = await bcryptjs.hash(userid.toString(), 10);
+    const encodedToken = encodeURIComponent(token);
     if (emailtype === "Verify") {
       await User.findByIdAndUpdate(userid, {
         $set: {
-          verifytoken: token,
+          verifytoken: encodedToken,
           verifytokenExpiry: Date.now() + 3600000,
         },
       });
@@ -17,7 +18,7 @@ export const sendEmail = async ({ email, emailtype, userid }) => {
     if (emailtype === "Reset") {
       await User.findByIdAndUpdate(userid, {
         $set: {
-          forgotpasswordtoken: token,
+          forgotpasswordtoken: encodedToken, // Use the encoded token,
           forgotpasswordtokenExpiry: Date.now() + 3600000,
         },
       });
@@ -43,8 +44,8 @@ export const sendEmail = async ({ email, emailtype, userid }) => {
                     : "Click this link to verify your email"
                 } <a href="${
         process.env.NEXTAUTH_URL
-      }/verify?token=${token}">Verify Account</a></p>
-      <p>This link will expire in an hour. the token is ${token}</p>
+      }/verify?token=${encodedToken}">Verify Account</a></p>
+      <p>This link will expire in an hour. the token is ${encodedToken}</p>
                 <p>Best regards, <br> Sebanti's Team</p>
                 `,
     };

@@ -44,23 +44,20 @@ const SignupPage = () => {
       setFormData({ email: "", password: "", username: "" });
       setError("");
       router.push("/login");
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error(error.message);
-        setLoading(false);
-        setError(error.message);
-      } else {
-        console.error(error);
-        setLoading(false);
-        setError("An error occurred");
-      }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error:any) {
+      console.error(error);
+      setLoading(false);
+      setError(error?.response?.data?.message);
     } finally {
       setLoading(false);
     }
   };
   return (
     <div className="capitalize bg-slate-700 flex justify-center min-h-screen font-mono flex-col items-center gap-5 font-semibold">
-      <div className="text-2xl text-white">signup</div>
+      <div className="text-2xl text-white">
+        {loading ? "Processing" : "signup"}
+      </div>
       <form
         className="flex flex-col gap-4 justify-center items-center "
         onSubmit={(e) => {
@@ -105,8 +102,8 @@ const SignupPage = () => {
         >
           Signup <span className="animate-spin">{loading && "..."}</span>
         </button>
-        <p className="text-red-400">{error}</p>
       </form>
+      <p className="text-red-400">{error}</p>
     </div>
   );
 };

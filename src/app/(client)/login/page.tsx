@@ -23,16 +23,11 @@ const Loginpage = () => {
       setFormData({ email: "", password: "" });
       setError("");
       router.push("/profile");
-    } catch (error) {
-      if (error instanceof Error) {
-        console.error(error.message);
-        setLoading(false);
-        setError(error.message);
-      } else {
-        console.error(error);
-        setLoading(false);
-        setError("An error occurred");
-      }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error:any) {
+      console.error(error);
+      setLoading(false);
+      setError(error?.response?.data?.message);
     } finally {
       setLoading(false);
       setButtonDisabled(false);
@@ -98,8 +93,20 @@ const Loginpage = () => {
           >
             Login <span className="animate-spin">{loading && "..."}</span>
           </button>
-          <p className="text-red-400">{error}</p>
+          <div className="flex justify-end text-blue-500 cursor-pointer">
+            forgot password?
+          </div>
+          <div className="text-white text-sm">
+            Not a user?{" "}
+            <span
+              className="text-blue-500 cursor-pointer"
+              onClick={() => router.push("/signup")}
+            >
+              Signup
+            </span>
+          </div>
         </form>
+        <p className="text-red-400">{error}</p>
       </div>
     </>
   );
