@@ -44,8 +44,8 @@ const SignupPage = () => {
       setFormData({ email: "", password: "", username: "" });
       setError("");
       router.push("/login");
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    } catch (error:any) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
       console.error(error);
       setLoading(false);
       setError(error?.response?.data?.message);
@@ -103,6 +103,15 @@ const SignupPage = () => {
           Signup <span className="animate-spin">{loading && "..."}</span>
         </button>
       </form>
+      <div className="text-white text-sm">
+        Already a user?{" "}
+        <span
+          className="text-blue-500 cursor-pointer"
+          onClick={() => router.push("/login")}
+        >
+          Login
+        </span>
+      </div>
       <p className="text-red-400">{error}</p>
     </div>
   );
